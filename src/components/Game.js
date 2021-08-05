@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useStopwatch } from 'react-timer-hook';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,6 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Picture from './Picture';
+import StopWatch from './StopWatch';
+
 
 const drawerWidth = 240;
 
@@ -41,25 +44,43 @@ function Game() {
 
     const classes = useStyles();
     const [items, setItems] = useState([]);
-    let [arr, setArr] = useState([])
+    const [time, setTime] = useState('');
+    const [score, setScore] = useState('')
+    let [arr, setArr] = useState([]);
+
 
     const handelGame = charName => {
-
         let newChar = charName
-
         setArr([...arr, newChar])
-        setItems([...items, newChar])
-        console.log(items)
-
-
 
     }
     useEffect(() => {
-        let newArr = items.filter((item, i) => {
-            return items.indexOf(item) === i
+
+        let newArr = arr.filter((item, i) => {
+            return arr.indexOf(item) === i
         });
+
         setItems(newArr)
+        console.log(score)
+        console.log(items)
+
+
     }, [arr])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // setTime(` ${hours} ${minutes} ${seconds} ${new Date().getMilliseconds()}`);
+
+        }, 100);
+
+        return () => clearInterval(interval);
+
+    }, [])
+    const getScore = (score) => {
+
+
+        setScore(score)
+    }
 
     return (
         <div className={classes.root}>
@@ -80,6 +101,9 @@ function Game() {
                 anchor="left"
             >
                 <div className={classes.toolbar} />
+                <StopWatch items={items} getScore={getScore} />
+
+
                 <Divider />
             </Drawer>
             <main className={classes.content}>
