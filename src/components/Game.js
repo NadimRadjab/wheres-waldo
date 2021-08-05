@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -40,6 +40,26 @@ const useStyles = makeStyles((theme) => ({
 function Game() {
 
     const classes = useStyles();
+    const [items, setItems] = useState([]);
+    let [arr, setArr] = useState([])
+
+    const handelGame = charName => {
+
+        let newChar = charName
+
+        setArr([...arr, newChar])
+        setItems([...items, newChar])
+        console.log(items)
+
+
+
+    }
+    useEffect(() => {
+        let newArr = items.filter((item, i) => {
+            return items.indexOf(item) === i
+        });
+        setItems(newArr)
+    }, [arr])
 
     return (
         <div className={classes.root}>
@@ -64,7 +84,7 @@ function Game() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Picture />
+                <Picture handleGame={handelGame} />
 
             </main>
         </div>
