@@ -34,21 +34,15 @@ function StopWatch({ items, getScore }) {
         if (items.length >= 2) {
             setIsPaused(true)
             getScore(scoreTime)
-        } else {
-            setIsPaused(false)
         }
-    }, [time])
-    const handleStart = () => {
-        setIsActive(true);
-        setIsPaused(false);
-    };
+        else {
+            setIsPaused(false);
+            handleReset()
+        }
+    }, [items])
 
-    const handlePauseResume = () => {
-        setIsPaused(!isPaused);
-    };
 
     const handleReset = () => {
-        setIsActive(false);
         setTime(0);
     };
 
