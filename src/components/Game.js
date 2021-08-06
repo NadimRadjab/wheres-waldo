@@ -14,6 +14,7 @@ import Picture from './Picture';
 import StopWatch from './StopWatch';
 import styles from '../styles/GameStyles';
 import ScoreBoard from './ScoreBoard';
+import { db } from '../firebase/config';
 
 
 
@@ -36,8 +37,33 @@ function Game({ classes }) {
         let newArr = arr.filter((item, i) => {
             return arr.indexOf(item) === i
         });
-
         setItems(newArr)
+
+
+    }, [arr]);
+
+    useEffect(() => {
+        let newArr = []
+        db.collection('Records').get().then((snapshot) => {
+            snapshot.docs.forEach(doc => {
+                const newRecord = {
+                    id: doc.id,
+                    playerName: doc.data().name,
+                    time: doc.data().time
+                };
+                newArr.push(newRecord)
+                let sorted = newArr.sort((a, b) => {
+                    let test = parseInt(a.time);
+                    let test2 = parseInt(b.time)
+                    return test - test2;
+                })
+                console.log(sorted)
+                setRecord(newArr)
+
+
+            })
+
+        })
 
     }, [arr])
 
@@ -47,12 +73,12 @@ function Game({ classes }) {
         setScore(score)
     }
 
-    const handleSubmit = name => {
-        const newRecord = {
-            playerName: name,
+    const handleSubmit = playerName => {
+
+        db.collection('Records').add({
+            name: playerName,
             time: score
-        };
-        setRecord([...record, newRecord]);
+        })
         setScore('');
         setItems([]);
         setArr([]);
