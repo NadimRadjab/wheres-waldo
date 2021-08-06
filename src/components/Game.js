@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useStopwatch } from 'react-timer-hook';
+import waldo from '../assets/waldo.png'
+import odlaw from '../assets/odlaw.jpeg'
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,8 +8,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import TimerIcon from '@material-ui/icons/Timer';
 import Picture from './Picture';
 import StopWatch from './StopWatch';
+
 
 
 const drawerWidth = 240;
@@ -30,12 +33,36 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     // necessary for content to be below app bar
-    toolbar: theme.mixins.toolbar,
+    toolbar: {
+        display: 'flex',
+        height: '80px',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        fontSize: '1.5rem',
+        "& svg": {
+            margin: '0.3rem'
+        }
+    },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(3),
     },
+    characters: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: '5rem 3rem',
+        '& img': {
+            margin: '1rem',
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%'
+        }
+    },
+    gameOver: {
+        filter: 'grayscale(100%)'
+    }
 }));
 
 
@@ -49,7 +76,7 @@ function Game() {
     let [arr, setArr] = useState([]);
 
 
-    const handelGame = charName => {
+    const handelName = charName => {
         let newChar = charName
         setArr([...arr, newChar])
 
@@ -61,23 +88,11 @@ function Game() {
         });
 
         setItems(newArr)
-        console.log(score)
-        console.log(items)
-
 
     }, [arr])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // setTime(` ${hours} ${minutes} ${seconds} ${new Date().getMilliseconds()}`);
 
-        }, 100);
-
-        return () => clearInterval(interval);
-
-    }, [])
     const getScore = (score) => {
-
 
         setScore(score)
     }
@@ -100,15 +115,25 @@ function Game() {
                 }}
                 anchor="left"
             >
-                <div className={classes.toolbar} />
-                <StopWatch items={items} getScore={getScore} />
+                <div className={classes.toolbar} >
+                    <StopWatch items={items} getScore={getScore} />
+                    <TimerIcon />
 
+                </div>
 
                 <Divider />
+                <div className={classes.characters}>
+                    <h2>Find:</h2>
+                    <img src={waldo} alt='waldo' className={items.includes('Waldo') ? classes.gameOver : ''} />
+                    <h3>Waldo</h3>
+                    <img src={odlaw} alt='odlaw' className={items.includes('Odlaw') ? classes.gameOver : ''} />
+                    <h3> Odlaw</h3>
+                </div>
+
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Picture handleGame={handelGame} />
+                <Picture handelName={handelName} />
 
             </main>
         </div>

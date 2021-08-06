@@ -1,13 +1,15 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Paper } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import waldo from '../assets/wheres-waldo.jpg'
+import { withStyles } from '@material-ui/core'
+import styles from '../styles/PictureStyles'
 
 
 
 
-function Picture({ handleGame }) {
+function Picture({ handelName, classes }) {
     const inputRef = useRef();
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -31,36 +33,47 @@ function Picture({ handleGame }) {
 
     }
 
+    //Sets coordinates for the Popup Menu
     const cord = e => {
         let elem = inputRef.current.getBoundingClientRect();
+
+        handleClick(e)
+        let mouseX = e.pageX - elem.left
+        let mouseY = e.pageY - elem.top
+        setPosition({ x: mouseX, y: mouseY })
+
+
+    }
+
+    //Sets coordinates for waldo and odlaw on img resize
+    useEffect(() => {
+        let elem = inputRef.current.getBoundingClientRect();
+
         let olyCordX = 346 - elem.left
         let olyCordY = 859 - elem.top
 
         let waldoCordX = 1565 - elem.left
         let waldoCordY = 184 - elem.top
 
-        let mouseX = e.pageX - elem.left
-        let mouseY = e.pageY - elem.top
 
         let Rx = elem.width / 1617
         let Ry = elem.height / 997.65
 
         let odlawX = (Rx * olyCordX)
         let odlawY = (Ry * olyCordY)
+
         let waldoX = Rx * waldoCordX
         let waldoY = Rx * waldoCordY
 
-        handleClick(e)
-        setPosition({ x: mouseX, y: mouseY })
         setOdlawPosition({ x: odlawX, y: odlawY })
         setWaldoPosition({ x: waldoX, y: waldoY })
+    }, [position])
 
-    }
+
     const handleOdlaw = () => {
 
         let odlaw = document.querySelector('#Odlow');
-        if (odlaw.textContent === 'Odlaw') handleGame('Odlaw');
-
+        if (odlaw.textContent === 'Odlaw') handelName('Odlaw');
         handleClose();
         setTimeout(() => {
             setMenuOdlaw(false);
@@ -71,7 +84,7 @@ function Picture({ handleGame }) {
     const handleWaldo = () => {
 
         let waldo = document.querySelector('#Waldo');
-        if (waldo.textContent === 'Waldo') handleGame('Waldo');
+        if (waldo.textContent === 'Waldo') handelName('Waldo');
 
         handleClose();
         setTimeout(() => {
@@ -84,6 +97,7 @@ function Picture({ handleGame }) {
         setMenuOdlaw(true);
         handleClick(e);
     }
+
     const handleMenuWaldo = (e) => {
         setMenuWaldo(true);
         handleClick(e);
@@ -131,17 +145,25 @@ function Picture({ handleGame }) {
 
     return (
 
-        <Paper style={{ position: 'absolute' }}  >
-            <div>
-                <img ref={inputRef} onClick={cord} src={waldo} alt='waldo img' style={{ width: '100%' }} />
+        <Paper className={classes.root} >
+            <div className={classes.items}>
+                <img
+                    ref={inputRef}
+                    onClick={cord}
+                    src={waldo}
+                    alt='waldo img' />
 
                 <span
-                    id='Odlow' onClick={handleMenuOdlow} style={{ position: 'absolute', left: odlawPosition.x - 10, top: odlawPosition.y - 25, width: '30px', height: '30px', fontSize: 0 }}>
+                    id='Odlow'
+                    onClick={handleMenuOdlow}
+                    style={{ left: odlawPosition.x - 16, top: odlawPosition.y - 20 }}>
                     Odlaw
 
                 </span>
                 <span
-                    id='Waldo' onClick={handleMenuWaldo} style={{ position: 'absolute', left: waldoPosition.x, top: waldoPosition.y - 5, width: '30px', height: '30px', background: 'blue' }}>
+                    id='Waldo'
+                    onClick={handleMenuWaldo}
+                    style={{ left: waldoPosition.x - 11, top: waldoPosition.y - 10 }}>
                     Waldo
                 </span>
 
@@ -153,4 +175,4 @@ function Picture({ handleGame }) {
     )
 }
 
-export default Picture;
+export default withStyles(styles)(Picture);
