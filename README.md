@@ -2,7 +2,7 @@
 
 Where's Waldo Game
 
-[Live Demo]()
+[Live Demo](https://nadimradjab.github.io/wheres-waldo/)
 
 ## How To Start
 
