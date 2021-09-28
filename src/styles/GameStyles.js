@@ -2,18 +2,25 @@ const drawerWidth = 240;
 const styles = theme => ({
     root: {
         display: 'flex',
-        height: '100vh'
+        height: '100vh',
+        fontFamily: 'Roboto Mono, monospace',
+
     },
     appBar: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
+
     },
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
+
     },
     drawerPaper: {
         width: drawerWidth,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     // necessary for content to be below app bar
     toolbar: {
@@ -29,7 +36,7 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing(3),
+        padding: theme.spacing(2),
     },
     characters: {
         display: 'flex',
@@ -40,8 +47,14 @@ const styles = theme => ({
             margin: '1rem',
             width: '100px',
             height: '100px',
-            borderRadius: '50%'
-        }
+            borderRadius: '50%',
+            [theme.breakpoints.down('xs')]: {
+                width: '70px',
+                height: '70px',
+
+            },
+        },
+
     },
     gameOver: {
         filter: 'grayscale(100%)'

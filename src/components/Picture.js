@@ -34,6 +34,7 @@ function Picture({ handelName, classes }) {
     }
 
     //Sets coordinates for the Popup Menu
+
     const cord = e => {
         let elem = inputRef.current.getBoundingClientRect();
 
@@ -41,8 +42,6 @@ function Picture({ handelName, classes }) {
         let mouseX = e.pageX - elem.left
         let mouseY = e.pageY - elem.top
         setPosition({ x: mouseX, y: mouseY })
-
-
     }
 
     //Sets coordinates for waldo and odlaw on img resize
@@ -59,14 +58,17 @@ function Picture({ handelName, classes }) {
         let Rx = elem.width / 1617
         let Ry = elem.height / 997.65
 
-        let odlawX = (Rx * olyCordX)
-        let odlawY = (Ry * olyCordY)
+        let odlawX = Rx * olyCordX
+        let odlawY = Rx * olyCordY
 
         let waldoX = Rx * waldoCordX
         let waldoY = Rx * waldoCordY
 
         setOdlawPosition({ x: odlawX, y: odlawY })
         setWaldoPosition({ x: waldoX, y: waldoY })
+
+
+
     }, [position])
 
 
@@ -152,20 +154,19 @@ function Picture({ handelName, classes }) {
                     onClick={cord}
                     src={waldo}
                     alt='waldo img' />
-
                 <span
                     id='Odlow'
                     onClick={handleMenuOdlow}
                     style={{ left: odlawPosition.x - 16, top: odlawPosition.y - 20 }}>
                     Odlaw
-
                 </span>
                 <span
                     id='Waldo'
                     onClick={handleMenuWaldo}
-                    style={{ left: waldoPosition.x - 11, top: waldoPosition.y - 10 }}>
+                    style={{ left: waldoPosition.x - 22, top: waldoPosition.y - 10 }}>
                     Waldo
                 </span>
+
 
             </div>
             {menu}

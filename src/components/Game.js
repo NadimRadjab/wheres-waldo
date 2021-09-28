@@ -18,7 +18,6 @@ import { db } from '../firebase/config';
 
 
 
-
 function Game({ classes }) {
 
     const [items, setItems] = useState([]);
@@ -44,32 +43,47 @@ function Game({ classes }) {
 
     useEffect(() => {
         let newArr = []
-        db.collection('Records').get().then((snapshot) => {
-            snapshot.docs.forEach(doc => {
-                const newRecord = {
-                    id: doc.id,
-                    playerName: doc.data().name,
-                    time: doc.data().time
-                };
-                newArr.push(newRecord)
-                let sorted = newArr.sort((a, b) => {
-                    let test = parseInt(a.time);
-                    let test2 = parseInt(b.time)
-                    return test - test2;
-                })
-                console.log(sorted)
-                setRecord(newArr)
+        db.collection('Records')
+            .limit(10)
+            .get().then((snapshot) => {
+                snapshot.docs.forEach(doc => {
+                    const newRecord = {
+                        id: doc.id,
+                        playerName: doc.data().name,
+                        time: doc.data().time
+                    };
+                    newArr.push(newRecord)
 
+                    //Sorts By Time
+                    let sorted = newArr.sort((a, b) => {
+
+                        return a.time - b.time
+                    })
+                    //Makes The time in a string.
+                    let maped = sorted.map(item => {
+                        let milliseconds = ("0" + ((item.time / 10) % 100)).slice(-2);
+                        let seconds = ("0" + Math.floor((item.time / 1000) % 60)).slice(-2);
+                        let minutes = ("0" + Math.floor((item.time / 60000) % 60)).slice(-2);
+                        let fixedTime = `${minutes}:${seconds}:${milliseconds}`;
+                        let obj = {
+                            id: item.id,
+                            name: item.playerName,
+                            time: fixedTime
+                        }
+                        return obj
+
+                    })
+
+                    setRecord(maped)
+
+                })
 
             })
-
-        })
 
     }, [arr])
 
 
     const getScore = (score) => {
-
         setScore(score)
     }
 
@@ -111,7 +125,7 @@ function Game({ classes }) {
                 <ScoreBoard record={record} />
                 <Divider />
                 <div className={classes.characters}>
-                    <h2>Find:</h2>
+                    <h2>Find</h2>
                     <img src={waldo} alt='waldo' className={items.includes('Waldo') ? classes.gameOver : ''} />
                     <h3>Waldo</h3>
                     <img src={odlaw} alt='odlaw' className={items.includes('Odlaw') ? classes.gameOver : ''} />

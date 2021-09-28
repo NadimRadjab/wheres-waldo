@@ -3,26 +3,21 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import styles from '../styles/ScoreBoardStyles';
 
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 500,
-    },
-});
-function ScoreBoard({ record }) {
+
+function ScoreBoard({ record, classes }) {
     const [open, setOpen] = useState(false);
     const [scroll, setScroll] = useState('paper');
-    const classes = useStyles();
     const handleClickOpen = (scrollType) => () => {
         setOpen(true);
         setScroll(scrollType);
@@ -44,11 +39,12 @@ function ScoreBoard({ record }) {
 
     return (
         <div>
-            <Button onClick={handleClickOpen('paper')}>
+            <Button color='primary' onClick={handleClickOpen('paper')}>
                 Score Board <FormatListNumberedIcon style={{ margin: '0.5rem' }} />
             </Button>
 
             <Dialog
+                className={classes.dialog}
                 open={open}
                 onClose={handleClose}
                 scroll={scroll}
@@ -63,14 +59,13 @@ function ScoreBoard({ record }) {
                             <TableRow>
                                 <TableCell>Name</TableCell>
                                 <TableCell align="right">Time</TableCell>
-
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {record.map((row) => (
-                                <TableRow key={row.playerName}>
+                                <TableRow key={row.id}>
                                     <TableCell component="th" scope="row">
-                                        {row.playerName}
+                                        {row.name}
                                     </TableCell>
                                     <TableCell align="right">{row.time}</TableCell>
                                 </TableRow>
@@ -90,4 +85,4 @@ function ScoreBoard({ record }) {
     );
 }
 
-export default ScoreBoard
+export default withStyles(styles)(ScoreBoard);

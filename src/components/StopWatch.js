@@ -3,8 +3,13 @@ import React, { useState, useEffect } from 'react'
 function StopWatch({ items, getScore }) {
     const [isActive, setIsActive] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
-    const [scoreTime, setScoreTime] = useState('')
+    const [scoreTime, setScoreTime] = useState(0)
     const [time, setTime] = useState(0);
+
+
+    let milliseconds = ("0" + ((time / 10) % 100)).slice(-2)
+    let seconds = ("0" + Math.floor((time / 1000) % 60)).slice(-2)
+    let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2)
 
     useEffect(() => {
         let interval = null;
@@ -12,6 +17,7 @@ function StopWatch({ items, getScore }) {
         if (isActive && isPaused === false) {
             interval = setInterval(() => {
                 setTime((time) => time + 10);
+                setScoreTime((time) => time + 10)
             }, 10);
         } else {
             clearInterval(interval);
@@ -24,26 +30,29 @@ function StopWatch({ items, getScore }) {
     }, [isActive, isPaused]);
 
 
-    let milliseconds = ("0" + ((time / 10) % 100)).slice(-2)
-    let seconds = ("0" + Math.floor((time / 1000) % 60)).slice(-2)
-    let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2)
 
     useEffect(() => {
-        setScoreTime(`${minutes}:${seconds}:${milliseconds}`)
+
+
+
 
         if (items.length >= 2) {
             setIsPaused(true)
-            getScore(scoreTime)
+            getScore(scoreTime, handleReset())
         }
         else {
             setIsPaused(false);
-            handleReset()
+
         }
+
     }, [items])
 
-
     const handleReset = () => {
-        setTime(0);
+        setTime(() => {
+            setScoreTime('')
+            setTime(0);
+        }, 0)
+
     };
 
     return (
